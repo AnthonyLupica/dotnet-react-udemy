@@ -1,0 +1,11 @@
+body {
+    background-color: red !important;
+}
+
+.ui.menu.inverted.fixed.top {
+    background-color: darkslateblue;
+}
+
+.ui.container.content-container {
+    margin-top: 6em;
+}
