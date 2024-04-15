@@ -4,9 +4,10 @@ import { Activity } from "../../../app/models/activity";
 interface Props {
     activity: Activity;
     cancelActivitySelection: () => void;
+    openForm: (id: string) => void;
 }
 
-const ActivityDetails = ({ activity, cancelActivitySelection } : Props) => {
+const ActivityDetails = ({ activity, cancelActivitySelection, openForm } : Props) => {
     return (
         <Card fluid>
             <Image src={`/assets/categoryImages/${activity.category}.jpg`} />
@@ -19,7 +20,12 @@ const ActivityDetails = ({ activity, cancelActivitySelection } : Props) => {
             </Card.Content>
             <Card.Content extra>
                 <Button.Group widths={2}>
-                    <Button basic color='blue' content='Edit'/>
+                    <Button 
+                        basic 
+                        color='blue' 
+                        content='Edit'
+                        onClick={() => openForm(activity.id)}
+                    />
                     <Button 
                         basic 
                         color='grey' 
