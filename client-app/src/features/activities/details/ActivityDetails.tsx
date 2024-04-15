@@ -10,7 +10,7 @@ interface Props {
 const ActivityDetails = ({ activity, cancelActivitySelection, openForm } : Props) => {
     return (
         <Card fluid>
-            <Image src={`/assets/categoryImages/${activity.category}.jpg`} />
+            <Image src={`/assets/categoryImages/${activity.category.toLowerCase()}.jpg`} />
             <Card.Content>
                 <Card.Header>{activity.title}</Card.Header>
                 <Card.Meta>
