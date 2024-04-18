@@ -3,18 +3,25 @@ import { Container } from 'semantic-ui-react';
 import { Activity } from '../models/activity';
 import Navbar from './Navbar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
-import axios from 'axios';
 import {v4 as uuid} from 'uuid';
+import agent from '../api/agent';
+import LoadingComponent from './LoadingComponent';
 
 const App = () => {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/activities')
+    agent.activities.list()
       .then(res => {
-        setActivities(res.data);
+        res.forEach(activity => {
+          activity.date = activity.date.split('T')[0];
+        });
+
+        setActivities(res);
+        setIsLoading(false);
       })
   }, []);
 
@@ -55,6 +62,10 @@ const App = () => {
       ...prevActivities.filter(x => x.id !== id)
     ]))
   };
+
+  if (isLoading) {
+    return <LoadingComponent />
+  }
 
   return (
     <>
