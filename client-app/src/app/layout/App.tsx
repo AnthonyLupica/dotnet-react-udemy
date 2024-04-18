@@ -12,6 +12,7 @@ const App = () => {
   const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     agent.activities.list()
@@ -43,24 +44,46 @@ const App = () => {
   };
   
   const handleCreateOrEditActivity = (activity: Activity) => {
-    activity.id 
-      ? setActivities(prevActivities => ([
-        ...prevActivities.filter(x => x.id !== activity.id),
-        activity
-      ]))
-      : setActivities(prevActivities => ([
-        ...prevActivities,
-        {...activity, id: uuid()}
-      ]))
+    setIsSubmitting(true);
+    if (activity.id) {
+      agent.activities.update(activity)
+        .then(() => {
+          setActivities(prevActivities => ([
+            ...prevActivities.filter(x => x.id !== activity.id),
+            {...activity}
+          ]));
 
-      setIsEditMode(false);
-      setSelectedActivity(activity);
+          setSelectedActivity(activity);
+          setIsEditMode(false);
+          setIsSubmitting(false)
+        });
+    } else {
+      activity.id = uuid();
+      agent.activities.create(activity)
+        .then(() => {
+          setActivities(prevActivities => ([
+            ...prevActivities,
+            {...activity}
+          ]));
+
+          setSelectedActivity(activity);
+          setIsEditMode(false);
+          setIsSubmitting(false)
+        });
+    }
   };
 
   const handleDeleteActivity = (id: string) => {
-    setActivities(prevActivities => ([
-      ...prevActivities.filter(x => x.id !== id)
-    ]))
+    setIsSubmitting(true);
+
+    agent.activities.delete(id)
+      .then(() => {
+        setActivities(prevActivities => ([
+          ...prevActivities.filter(x => x.id !== id)
+        ]));
+
+        setIsSubmitting(false);
+      });
   };
 
   if (isLoading) {
@@ -81,6 +104,7 @@ const App = () => {
           closeForm={handleFormClose}
           createOrEdit={handleCreateOrEditActivity}
           deleteActivity={handleDeleteActivity}
+          isSubmitting={isSubmitting}
         />
       </Container>
     </>

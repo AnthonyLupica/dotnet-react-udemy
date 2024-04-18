@@ -5,10 +5,11 @@ import { ChangeEvent, useState } from "react";
 interface Props {
     activity: Activity | undefined;
     closeForm: () => void;
-    createOrEdit: (activity: Activity) => void
+    createOrEdit: (activity: Activity) => void;
+    isSubmitting: boolean
 }
 
-const ActivityForm = ({ activity: selectedActivity, closeForm, createOrEdit }: Props) => {
+const ActivityForm = ({ activity: selectedActivity, closeForm, createOrEdit, isSubmitting }: Props) => {
     
     const initialState = selectedActivity ?? {
         id: '',
@@ -46,7 +47,13 @@ const ActivityForm = ({ activity: selectedActivity, closeForm, createOrEdit }: P
                 <Form.Input placeholder='Venue' value={activity.venue} name='venue' onChange={handleChange} />
                 
                 <Button.Group widths={1} floated="right">
-                    <Button basic positive type='submit' content='Submit'/>
+                    <Button 
+                        basic 
+                        positive 
+                        type='submit' 
+                        content='Submit'
+                        loading={isSubmitting}
+                    />
                     <Button 
                         basic color='grey' 
                         type='button' 

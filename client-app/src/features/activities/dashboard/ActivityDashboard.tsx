@@ -8,6 +8,7 @@ interface Props {
     activities: Activity[];
     selectedActivity: Activity | undefined;
     isEditMode: boolean;
+    isSubmitting: boolean
     selectActivity: (id: string) => void;
     cancelActivitySelection: () => void;
     openForm: (id: string) => void;
@@ -20,6 +21,7 @@ const ActivityDashboard = ({
     activities,
     selectedActivity,
     isEditMode,
+    isSubmitting,
     selectActivity,
     cancelActivitySelection,
     openForm,
@@ -33,6 +35,7 @@ const ActivityDashboard = ({
             <Grid.Column width='10'>
                 <ActivityList 
                     activities={activities} 
+                    isSubmitting={isSubmitting}
                     selectActivity={selectActivity} 
                     deleteActivity={deleteActivity} 
                 />
@@ -44,7 +47,12 @@ const ActivityDashboard = ({
                         openForm={openForm}
                     />
                 } { isEditMode &&
-                    <ActivityForm closeForm={closeForm} activity={selectedActivity} createOrEdit={createOrEdit} />
+                    <ActivityForm 
+                        closeForm={closeForm} 
+                        activity={selectedActivity} 
+                        createOrEdit={createOrEdit} 
+                        isSubmitting={isSubmitting}
+                    />
                 }
             </Grid.Column>
         </Grid>
