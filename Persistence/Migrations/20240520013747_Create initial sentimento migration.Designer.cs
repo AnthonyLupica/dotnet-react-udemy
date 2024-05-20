@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -10,9 +11,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240520013747_Create initial sentimento migration")]
+    partial class Createinitialsentimentomigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -52,25 +55,25 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("Anger")
+                    b.Property<float>("Anger")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("Disgust")
+                    b.Property<float>("Disgust")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("Fear")
+                    b.Property<float>("Fear")
                         .HasColumnType("REAL");
 
                     b.Property<Guid>("FkJournal")
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("Joy")
+                    b.Property<float>("Joy")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("Sadness")
+                    b.Property<float>("Sadness")
                         .HasColumnType("REAL");
 
-                    b.Property<double>("Surprise")
+                    b.Property<float>("Surprise")
                         .HasColumnType("REAL");
 
                     b.HasKey("Id");
@@ -85,9 +88,6 @@ namespace Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreationDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("EmotionColor")
