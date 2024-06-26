@@ -1,13 +1,12 @@
 import { Button, Card, Image } from "semantic-ui-react";
-import { Activity } from "../../../app/models/activity";
+import { useStore } from "../../../app/stores/store";
 
-interface Props {
-    activity: Activity;
-    cancelActivitySelection: () => void;
-    openForm: (id: string) => void;
-}
+const ActivityDetails = () => {
+    const { activityStore } = useStore();
+    const { selectedActivity: activity, openForm, cancelActivitySelection } = activityStore;
 
-const ActivityDetails = ({ activity, cancelActivitySelection, openForm } : Props) => {
+    if (!activity) return <></>;
+
     return (
         <Card fluid>
             <Image src={`/assets/categoryImages/${activity.category.toLowerCase()}.jpg`} />

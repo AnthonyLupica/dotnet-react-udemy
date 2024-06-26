@@ -2,8 +2,9 @@ body {
     background-color: whitesmoke !important;
 }
 
+
 .ui.menu.inverted.fixed.top {
-    background-color: darkslateblue;
+    background-image: linear-gradient(135deg, darkslateblue 0%, deepskyblue 60%, darkturquoise 90%) !important;
 }
 
 .ui.container.content-container {
