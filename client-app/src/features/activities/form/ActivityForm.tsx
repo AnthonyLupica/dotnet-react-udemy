@@ -1,20 +1,24 @@
 import { Button, Form, Segment } from "semantic-ui-react";
 import { Activity } from "../../../app/models/activity";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useStore } from "../../../app/stores/store";
 import { observer } from "mobx-react-lite";
+import { useParams } from "react-router-dom";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
 
 const ActivityForm = () => {
     const { activityStore } = useStore();
     const { 
-        selectedActivity, 
         loading,
-        closeForm, 
         createActivity, 
         updateActivity,
+        loadActivity,
+        loadingInitial
     } = activityStore;
+
+    const {id} = useParams();
     
-    const initialState = selectedActivity ?? {
+    const [activity, setActivity] = useState<Activity>({
         id: '',
         title: '',
         category: '',
@@ -22,9 +26,14 @@ const ActivityForm = () => {
         date: '',
         city: '',
         venue: ''
-    }
+    });
 
-    const [activity, setActivity] = useState<Activity>(initialState);
+    useEffect(() => {
+        if (id) {
+            loadActivity(id)
+                .then(activity => setActivity(activity!))
+        }
+    }, [id, loadActivity]);
 
     const handleSubmit = () => {
         activity.id 
@@ -40,6 +49,8 @@ const ActivityForm = () => {
             [name]: value
         }));
     };
+
+    if (loadingInitial) return <LoadingComponent content='loading activity...' />
 
     return (
         <Segment clearing>
@@ -63,7 +74,6 @@ const ActivityForm = () => {
                         basic color='grey' 
                         type='button' 
                         content='Cancel'
-                        onClick={closeForm}
                     />
                 </Button.Group>
             </Form>

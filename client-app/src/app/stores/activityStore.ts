@@ -23,6 +23,7 @@ export default class ActivityStore {
     }
 
     loadActivities = async () => {
+        this.setLoadingInitial(true);
         try {
             const activities = await agent.activities.list();
             
@@ -36,27 +37,38 @@ export default class ActivityStore {
             console.log(error);
             this.setLoadingInitial(false);
         }
-    }
+    };
+
+    loadActivity = async (id: string) => {
+        let activity = this.activityRegistry.get(id);
+
+        if (activity) {
+            this.selectedActivity = activity;
+
+            return activity;
+        } else {
+            this.setLoadingInitial(true);
+
+            try {
+                activity = await agent.activities.details(id);
+                
+                activity.date = activity.date.split('T')[0];
+                this.activityRegistry.set(activity.id, activity);
+                
+                runInAction(() => this.selectedActivity = activity);
+
+                this.setLoadingInitial(false);
+
+                return activity;
+            } catch (error) {
+                console.log(error);
+                this.setLoadingInitial(false);
+            }
+        }
+    };
 
     setLoadingInitial = (state: boolean) => {
         this.loadingInitial = state;
-    };
-
-    selectActivity = (id: string) => {
-        this.selectedActivity = this.activityRegistry.get(id);
-    };
-
-    cancelActivitySelection = () => {
-        this.selectedActivity = undefined;
-    };
-
-    openForm = (id?: string) => {
-        id ? this.selectActivity(id) : this.cancelActivitySelection();
-        this.editMode = true;
-    };
-
-    closeForm = () => {
-        this.editMode = false;
     };
 
     createActivity = async (activity: Activity) => {
@@ -107,16 +119,14 @@ export default class ActivityStore {
 
             runInAction(() => {
                 this.activityRegistry.delete(id);
-
-                if (this.selectedActivity?.id === id) {
-                    this.cancelActivitySelection;
-                }
-
                 this.loading = false;
             });
         } catch (error) {
             console.log(error);
-            this.loading = false;
+
+            runInAction(() => {
+                this.loading = false;
+            });
         }
     };
 }
